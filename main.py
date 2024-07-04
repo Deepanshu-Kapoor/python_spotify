@@ -54,6 +54,8 @@ def get_auth_header(token):
 
 # Function to search for an artist using the Spotify API
 def search_artist(token, artist_name):
+    if(len(artist_name)==0):
+        return None
     # Spotify API search endpoint
     url = "https://api.spotify.com/v1/search"
 
@@ -70,15 +72,36 @@ def search_artist(token, artist_name):
     result = get(query_url, headers=header)
 
     # Parse the JSON response content
-    json_result = json.loads(result.content)
+    json_result = json.loads(result.content)['artists']['items']
 
     # Return the parsed JSON result
     return json_result
 
+def value_checker(list):
+    if(list is None or len(list) == 0):
+        return False
+    else:
+        return True
 
-print(search_artist(get_token(),"Karan Aujla"))
-print("Hi, I'm Py. I will help you to search the song or album of an artist or even if you don't know artist")
-user_input=input("Enter the ");
-def search_by_artist(artist_name):
 
-    return True
+
+print("Hi, I'm Py. I will help you to search the song or artist on spotify")
+user_input=input("Enter if you want to look for Artist or Song ")
+if(user_input.lower()=="artist"):
+    artist_name=input("Enter the name of Artist")
+    flag=1
+    while(flag!=0):
+        if(value_checker(search_artist(get_token(),artist_name))):
+            print("Here are the details of the artist")
+        else:
+            print("Sorry the Artist's name you entered doesn't exist.")
+            checker=input("Do you want to search again? Please enter Yes or No")
+            while(checker!="no" or checker!="yes"):
+                print("Please enter the valid input")
+                checker = input("Please enter Yes or No")
+            if(checker.lower()=="no"):
+                flag=0
+
+
+
+
