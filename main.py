@@ -101,12 +101,29 @@ def value_checker(list):
     else:
         return True
 
+
+def continue_or_not(dialogue, confirmer):
+    # Prompt the user for input
+    checker = input(dialogue).strip().lower()
+
+    # Check if the input is either "yes" or "no"
+    while checker not in ["no", "yes"]:
+        print("Please enter a valid input.")
+        checker = input("Please enter Yes or No: ").strip().lower()
+
+    # Update the confirmer based on the user's input
+    if checker == "no":
+        confirmer = 0
+
+    # Return the updated confirmer value
+    return confirmer
+
 print("Hi, I'm Py. I will help you to search the song or artist on spotify")
 user_input=input("Enter if you want to look for Artist or Song ")
 confirm=1
 while(confirm!=0):
     if(user_input.lower()=="artist"):
-        artist_name=input("Enter the name of Artist")
+        artist_name=input("Please enter the name of Artist")
         artist_values=search_artist(get_token(),artist_name)
         flag=1
         while(flag!=0):
@@ -122,15 +139,10 @@ while(confirm!=0):
 
             else:
                 print("Sorry the Artist's name you entered doesn't exist.")
-                checker=input("Do you want to search again? Please enter Yes or No")
-                while(checker!="no" or checker!="yes"):
-                    print("Please enter the valid input")
-                    checker = input("Please enter Yes or No")
-                if(checker.lower()=="no"):
-                    flag=0
-    confirming=input("Do you still want to search anything? Yes or No")
-    while (confirming != "no" or confirming != "yes"):
-        print("Please enter the valid input")
-        confirming = input("Please enter Yes or No")
-        if(confirming.lower()=="no"):
-            confirm=0
+                dial1="Do you want to search again? Please enter Yes or No"
+                flag=continue_or_not(dial1,flag)
+
+
+            dial2=input("Do you still want to search another artist? Yes or No")
+            flag=continue_or_not(dial2,flag)
+            artist_name = input("Please enter the name of Artist.")
