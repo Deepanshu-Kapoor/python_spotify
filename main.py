@@ -77,31 +77,60 @@ def search_artist(token, artist_name):
     # Return the parsed JSON result
     return json_result
 
+def top_tracks_artist(token, artist_id):
+    if(len(artist_id)==0):
+        return None
+    # Spotify API search endpoint
+    url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=CA"
+
+    # Get the authorization header with the access token
+    header = get_auth_header(token)
+
+    # Make a GET request to the Spotify API with the full URL and authorization header
+    result = get(url, headers=header)
+
+    # Parse the JSON response content
+    json_result = json.loads(result.content)["tracks"]
+
+    # Return the parsed JSON result
+    return json_result
+
 def value_checker(list):
     if(list is None or len(list) == 0):
         return False
     else:
         return True
 
-
-
 print("Hi, I'm Py. I will help you to search the song or artist on spotify")
 user_input=input("Enter if you want to look for Artist or Song ")
-if(user_input.lower()=="artist"):
-    artist_name=input("Enter the name of Artist")
-    flag=1
-    while(flag!=0):
-        if(value_checker(search_artist(get_token(),artist_name))):
-            print("Here are the details of the artist")
-        else:
-            print("Sorry the Artist's name you entered doesn't exist.")
-            checker=input("Do you want to search again? Please enter Yes or No")
-            while(checker!="no" or checker!="yes"):
-                print("Please enter the valid input")
-                checker = input("Please enter Yes or No")
-            if(checker.lower()=="no"):
-                flag=0
+confirm=1
+while(confirm!=0):
+    if(user_input.lower()=="artist"):
+        artist_name=input("Enter the name of Artist")
+        artist_values=search_artist(get_token(),artist_name)
+        flag=1
+        while(flag!=0):
+            if(value_checker(artist_values)):
+                print("Here are the details of the artist")
+                print("These are the top tracks of the artist about you asked")
+                artist_id=artist_values[0]['id']
+                result = top_tracks_artist(get_token(), artist_id)
+                for x in range(0, len(result)):
+                  print(f"{x+1} {result[x]['name']}")
+                break
 
 
-
-
+            else:
+                print("Sorry the Artist's name you entered doesn't exist.")
+                checker=input("Do you want to search again? Please enter Yes or No")
+                while(checker!="no" or checker!="yes"):
+                    print("Please enter the valid input")
+                    checker = input("Please enter Yes or No")
+                if(checker.lower()=="no"):
+                    flag=0
+    confirming=input("Do you still want to search anything? Yes or No")
+    while (confirming != "no" or confirming != "yes"):
+        print("Please enter the valid input")
+        confirming = input("Please enter Yes or No")
+        if(confirming.lower()=="no"):
+            confirm=0
