@@ -1,3 +1,3 @@
 # python_spotify
 
-# I'm trying to learn how to use python and api to make a project.
+# I made this project using Python and spotify api. You can search about Artist or the Album using this.
