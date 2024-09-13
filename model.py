@@ -1,8 +1,8 @@
-import json
-import os
-import base64
-from requests import post, get
-from dotenv import load_dotenv
+import json  # Module to work with JSON data
+import os  # Module to interact with the operating system, including environment variables
+import base64  # Module to perform Base64 encoding
+from requests import post, get  # Import POST and GET methods from the requests library
+from dotenv import load_dotenv  # Module to load environment variables from a .env file
 
 # Load environment variables from .env file
 load_dotenv()
@@ -31,7 +31,7 @@ def get_token():
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
-    # Data payload for the POST request
+    # Data payload for the POST request to specify grant type
     data = {"grant_type": "client_credentials"}
 
     # Make a POST request to the token endpoint
@@ -73,10 +73,11 @@ def search_artist(token, artist_name):
     # Return the parsed JSON result
     return json_result
 
+# Function to fetch the top tracks of an artist using their Spotify ID
 def top_tracks_artist(token, artist_id):
     if len(artist_id) == 0:
         return None
-    # Spotify API search endpoint
+    # Spotify API endpoint to get an artist's top tracks for a specific country
     url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=CA"
 
     # Get the authorization header with the access token
@@ -91,6 +92,7 @@ def top_tracks_artist(token, artist_id):
     # Return the parsed JSON result
     return json_result
 
+# Function to search for an album using the Spotify API
 def search_album(token, album_name):
     if len(album_name) == 0:
         return None
@@ -100,7 +102,7 @@ def search_album(token, album_name):
     # Get the authorization header with the access token
     header = get_auth_header(token)
 
-    # Construct the query string with the artist name, search type, and result limit
+    # Construct the query string with the album name, search type, and result limit
     query = f"?q={album_name}&type=album&limit=1"
 
     # Combine the base URL and query string to form the full URL
@@ -115,10 +117,11 @@ def search_album(token, album_name):
     # Return the parsed JSON result
     return json_result
 
+# Function to fetch the track items of an album using its Spotify ID
 def tracks_album_items(token, album_id):
     if len(album_id) == 0:
         return None
-    # Spotify API search endpoint
+    # Spotify API endpoint to get the tracks of an album
     url = f"https://api.spotify.com/v1/albums/{album_id}?country=CA"
 
     # Get the authorization header with the access token
@@ -133,5 +136,6 @@ def tracks_album_items(token, album_id):
     # Return the parsed JSON result
     return json_result
 
+# Function to get the Spotify ID of the first result from a search output
 def get_spotify_id(search_output):
     return search_output[0]["id"]
